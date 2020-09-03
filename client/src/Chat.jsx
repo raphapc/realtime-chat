@@ -1,6 +1,6 @@
 import { ApolloClient, ApolloProvider, InMemoryCache, useQuery, gql } from '@apollo/client';
 import React from 'react';
-import { Container } from 'shards-react';
+import { Container, Row, Col, FormInput, Button } from 'shards-react';
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/',
@@ -33,6 +33,22 @@ const Messages = ({ user }) => {
             paddingBottom: '1em',
           }}
         >
+          {user !== messageUser && (
+            <div
+              style={{
+                height: 50,
+                width: 50,
+                marginRight: '0.5rem',
+                border: '2px solid #e5e6ea',
+                borderRadius: 50,
+                textAlign: 'center',
+                fontSize: '18pt',
+                paddingTop: 5,
+              }}
+            >
+              {messageUser.slice(0, 2).toUpperCase()}
+            </div>
+          )}
           <div
             style={{
               background: user === messageUser ? '#58bf56' : '#e5e6ea',
@@ -51,9 +67,13 @@ const Messages = ({ user }) => {
 };
 
 const Chat = () => {
+  const [state, stateSet] = React.useState({
+    user: 'Raphael',
+    content: '',
+  });
   return (
     <Container>
-      <Messages user="Rapha"></Messages>
+      <Messages user={state.user}></Messages>
     </Container>
   );
 };
