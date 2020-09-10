@@ -71,9 +71,59 @@ const Chat = () => {
     user: 'Raphael',
     content: '',
   });
+  const [postMessage] = useMutation(POST_MESSAGE);
+
+  const onSend = () => {
+    if (state.content.length > 0) {
+      postMessage({
+        variables: state,
+      });
+    }
+    stateSet({
+      ...state,
+      content: '',
+    });
+  };
+
   return (
     <Container>
       <Messages user={state.user}></Messages>
+      <Row>
+        <Col xs={2} style={{ padding: 0 }}>
+          <FormInput
+            label="User"
+            value={state.user}
+            onChange={(evt) =>
+              stateSet({
+                ...state,
+                user: evt.target.value,
+              })
+            }
+          />
+        </Col>
+        <Col xs={8}>
+          <FormInput
+            label="Content"
+            value={state.content}
+            onChange={(evt) =>
+              stateSet({
+                ...state,
+                content: evt.target.value,
+              })
+            }
+            onKeyUp={(evt) => {
+              if (evt.keyCode === 13) {
+                onSend();
+              }
+            }}
+          />
+        </Col>
+        <Col xs={2} style={{ padding: 0 }}>
+          <Button onClick={() => onSend()} style={{ width: '100%' }}>
+            Send
+          </Button>
+        </Col>
+      </Row>
     </Container>
   );
 };
