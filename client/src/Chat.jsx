@@ -1,8 +1,17 @@
-import { ApolloClient, ApolloProvider, InMemoryCache, useQuery, gql } from '@apollo/client';
+import { ApolloClient, ApolloProvider, gql, InMemoryCache, useMutation, useQuery } from '@apollo/client';
 import React from 'react';
-import { Container, Row, Col, FormInput, Button } from 'shards-react';
+import { Button, Col, Container, FormInput, Row } from 'shards-react';
+import { WebSocketLink } from '@apollo/client/link/ws';
+
+const link = new WebSocketLink({
+  uri: `ws://localhost:4000/`,
+  options: {
+    reconnect: true,
+  },
+});
 
 const client = new ApolloClient({
+  link,
   uri: 'http://localhost:4000/',
   cache: new InMemoryCache(),
 });
@@ -17,8 +26,13 @@ const GET_MESSAGES = gql`
   }
 `;
 
+const POST_MESSAGE = gql`
+  mutation($user: String!, $content: String!) {
+    postMessage(user: $user, content: $content)
+  }
+`;
 const Messages = ({ user }) => {
-  const { data } = useQuery(GET_MESSAGES);
+  const { data } = useQuery(GET_MESSAGES, { pollInterval: 500 });
   if (!data) {
     return null;
   }
@@ -40,7 +54,7 @@ const Messages = ({ user }) => {
                 width: 50,
                 marginRight: '0.5rem',
                 border: '2px solid #e5e6ea',
-                borderRadius: 50,
+                borderRadius: 25,
                 textAlign: 'center',
                 fontSize: '18pt',
                 paddingTop: 5,
@@ -71,6 +85,7 @@ const Chat = () => {
     user: 'Raphael',
     content: '',
   });
+
   const [postMessage] = useMutation(POST_MESSAGE);
 
   const onSend = () => {
