@@ -6,11 +6,14 @@ import 'shards-ui/dist/css/shards.min.css';
 import { Container } from 'shards-react';
 import './index.css';
 
+import Chat from 'chat/Chat';
+
 const App = () => (
   <Container>
-    <p></p>
+    <p>Test in the Home Page App</p>
     <h1>Chat</h1>
-    <p></p>
+    <Chat />
+    <p>Test in the Home Page App</p>
   </Container>
 );
 
